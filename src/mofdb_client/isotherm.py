@@ -1,5 +1,6 @@
-import dataclasses
 from typing import List, Optional
+
+import dataclasses
 
 from .adsorbate import Adsorbate
 from .adsorbent import Adsorbent

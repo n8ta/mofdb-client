@@ -1,5 +1,6 @@
-import dataclasses
 from typing import Generator
+
+import dataclasses
 import requests
 
 from .mof import Mof
@@ -18,8 +19,11 @@ def fetch(
         sa_m2g_max: float = None,
         sa_m2cm3_min: float = None,
         sa_m2cm3_max: float = None,
-        limit: int = None) -> Generator[Mof, None, None]:
+        limit: int = None
+    ) -> Generator[Mof, None, None]:
+
     params = {}
+
     if mofid:
         params["mofid"] = mofid
     if mofkey:
@@ -46,8 +50,11 @@ def fetch(
         params["sa_m2cm3_min"] = sa_m2cm3_min
     if sa_m2cm3_max:
         params["sa_m2cm3_max"] = sa_m2cm3_max
+
     r = requests.get('https://mof.tech.northwestern.edu/mofs.json', params=params)
+
     res = [Mof(x) for x in r.json()['results']]
+
     if limit:
         yield from res[0:limit]
     else:

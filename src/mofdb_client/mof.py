@@ -1,8 +1,11 @@
-import dataclasses
 from typing import Optional, List
+
+import dataclasses
+
 from .adsorbate import Adsorbate
-from .isotherm import Isotherm
 from .element import Element
+from .isotherm import Isotherm
+
 
 @dataclasses.dataclass
 class Mof:

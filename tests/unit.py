@@ -26,7 +26,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_mof_fields(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         self.stub("mofs_one_page", {})
         mofs = list(fetch())
         mof = mofs[0]
@@ -85,14 +85,14 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_limit(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         self.stub("mofs_one_page", {})
         mofs = list(fetch(limit=3))
         self.assertEqual(len(mofs), 3)
 
     @responses.activate
     def test_mofid_match(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         qahdua = "[O-]C(=O)C1=[C][C]=C([C]=[C]1)C(=O)[O-].[O-]C(=O)C1=[C][C]=C([C]=[C]1)C1=[C][C]=[C]C(=[C]1)C1=[C][C]=C([C]=[C]1)C(=O)[O-].[Zn][O]([Zn])([Zn])[Zn] MOFid-v1.UNKNOWN.cat2"
         self.stub("mofid", {'mofid': qahdua})
         mofs = list(fetch(mofid=qahdua))
@@ -101,7 +101,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_mofkey_match(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         mofkey = "Zn.LRMYCMFGPUSZCE.RHFSRTQXETUEBB.MOFkey-v1.UNKNOWN"
         self.stub("mofid", {'mofkey': mofkey})
         mofs = list(fetch(mofkey=mofkey))
@@ -111,7 +111,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_vf_min(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         prop = 13.3
         self.stub("mofs_one_page", {'vf_min': prop})
         mofs = list(fetch(vf_min=prop))
@@ -119,7 +119,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_vf_max(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         prop = 13.3
         self.stub("mofs_one_page", {'vf_max': prop})
         mofs = list(fetch(vf_max=prop))
@@ -127,7 +127,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_lcd_min(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         prop = 13.3
         self.stub("mofs_one_page", {'lcd_min': prop})
         mofs = list(fetch(lcd_min=prop))
@@ -135,7 +135,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_lcd_max(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         prop = 13.3
         self.stub("mofs_one_page", {'lcd_max': prop})
         mofs = list(fetch(lcd_max=prop))
@@ -143,7 +143,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_pld_min(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         prop = 13.3
         self.stub("mofs_one_page", {'pld_min': prop})
         mofs = list(fetch(pld_min=prop))
@@ -151,7 +151,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_pld_max(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         prop = 13.3
         self.stub("mofs_one_page", {'pld_max': prop})
         mofs = list(fetch(pld_max=prop))
@@ -159,7 +159,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_sa_m2g_min(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         prop = 13.3
         self.stub("mofs_one_page", {'sa_m2g_min': prop})
         mofs = list(fetch(sa_m2g_min=prop))
@@ -167,7 +167,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_sa_m2g_max(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         prop = 13.3
         self.stub("mofs_one_page", {'sa_m2g_max': prop})
         mofs = list(fetch(sa_m2g_max=prop))
@@ -175,7 +175,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_sa_m2cm3_min(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         prop = 13.3
         self.stub("mofs_one_page", {'sa_m2cm3_min': prop})
         mofs = list(fetch(sa_m2cm3_min=prop))
@@ -183,7 +183,7 @@ class BasicTests(unittest.TestCase):
 
     @responses.activate
     def test_sa_m2cm3_max(self):
-        from mofdb import fetch
+        from mofdb_client import fetch
         prop = 13.3
         self.stub("mofs_one_page", {'sa_m2cm3_max': prop})
         mofs = list(fetch(sa_m2cm3_max=prop))
@@ -193,6 +193,9 @@ class BasicTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    file_path = pathlib.Path(__file__).parent.parent.resolve()
-    sys.path.append(os.path.join(file_path, "src"))
+
+    # we won't need those 2 lines since we installed the pckge in dev mode
+    # file_path = pathlib.Path(__file__).parent.parent.resolve()
+    # sys.path.append(os.path.join(file_path, "src"))
+
     unittest.main()

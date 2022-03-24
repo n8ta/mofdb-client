@@ -1,0 +1,5 @@
+# https://packaging.python.org/guides/using-manifest-in/
+graft src/mofdb_client
+graft tests
+global-exclude __pycache__
+global-exclude *.py[cod]
