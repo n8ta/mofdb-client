@@ -1,4 +1,5 @@
 .idea
+.DS_Store
 dist
 __pycache__
 mofdb_client.egg-info

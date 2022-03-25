@@ -2,13 +2,16 @@
 
 A typed lightweight client wrapping the [mofdb api](https://mof.tech.northwestern.edu/api).
 
-![Example of mofdb-client IDE autocompletion](assets/screen0.png)
+### Installation
 
 ```shell
 python3 -m pip install mofdb_client
 ```
 
 ### Example
+
+![Example of mofdb-client IDE autocompletion](assets/screen0.png)
+
 ```python3
 from mofdb_client import fetch
 for mof in fetch(vf_min=0.5, vf_max=0.99):
@@ -53,6 +56,9 @@ This mof's cif file starts with: '_cell_length_a       18.571'
 ### Design Note
 `fetch` is lazy because mofDB is large. Be sure to loop over it with `for mof in fetch()` and NOT `for mof in list(fetch())` since 
 building the list will download all the mofs before it starts processing and this will be very slow and may well run out of memory.
+
+### Compatibility
+Tested on Python 3.9 likely to work on any 3.x.
 
 ### Future Enhancements:
 - Retries for transient network failures with exponential backoff
