@@ -62,3 +62,4 @@ Tested on Python 3.9 likely to work on any 3.x.
 
 ### Future Enhancements:
 - Retries for transient network failures with exponential backoff
+- Support for unit conversions
