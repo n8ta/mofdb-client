@@ -2,9 +2,7 @@
 
 A typed lightweight client wrapping the [mofdb api](https://mof.tech.northwestern.edu/api).
 
-|||
-|-|-|
-|![Example of mofdb-client IDE autocompletion](assets/screen0.png)|![Example of mofdb-client IDE autocompletion](assets/screen1.png)|
+![Example of mofdb-client IDE autocompletion](assets/screen0.png)
 
 ```shell
 python3 -m pip install mofdb_client
