@@ -52,6 +52,7 @@ This mof's cif file starts with: '_cell_length_a       18.571'
 - sa_m2cm3_min: float 
 - sa_m2cm3_max: float 
 - limit: int
+- telemetry: bool default true (see telemetry section)
 
 ### Design Note
 `fetch` is lazy because mofDB is large. Be sure to loop over it with `for mof in fetch()` and NOT `for mof in list(fetch())` since 
@@ -61,5 +62,19 @@ building the list will download all the mofs before it starts processing and thi
 Tested on Python 3.9 likely to work on any 3.x.
 
 ### Future Enhancements:
-- Retries for transient network failures with exponential backoff
-- Support for unit conversions
+- [ ] Retries for transient network failures with exponential backoff
+
+- [ ] Support for unit conversions
+
+### Telemetry
+This package may report crashes/calls to fetch in library code when the telemetry arg is true. This is done using 
+[sentry](https://docs.sentry.io/). Nothing in addition to fetch params and data captured by default by sentry is ever
+captured.
+
+For example this could include:
+- a stack trace including your code
+- operating system version
+- time
+- python runtime version
+- hostname
+- anything else sentry captures by default

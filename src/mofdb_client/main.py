@@ -8,7 +8,7 @@ from .mof import Mof
 def get_page(params, page=1) -> Tuple[List[Mof], int]:
     if page and page != 1:
         params["page"] = page
-    r = requests.get('https://mof.tech.northwestern.edu/mofs.json', params=params)
+    r = requests.get('https://mofs.tech.northwestern.edu/mofs.json', params=params)
     json_response = r.json()
     return [Mof(x) for x in json_response['results']], json_response["pages"]
 
@@ -22,7 +22,39 @@ def get_all(params: Dict[str, str]) -> Generator[Mof, None, None]:
         page += 1
 
 
-def fetch(
+def fetch(mofid: str = None,
+          mofkey: str = None,
+          vf_min: float = None,
+          vf_max: float = None,
+          lcd_min: float = None,
+          lcd_max: float = None,
+          pld_min: float = None,
+          pld_max: float = None,
+          sa_m2g_min: float = None,
+          sa_m2g_max: float = None,
+          sa_m2cm3_min: float = None,
+          sa_m2cm3_max: float = None,
+          telemetry: bool = True,
+          limit: int = None) -> Generator[Mof, None, None]:
+    if telemetry:
+        try:
+            yield from fetch_inner(mofid=mofid, mofkey=mofkey, vf_min=vf_min, vf_max=vf_max, lcd_min=lcd_min,
+                               lcd_max=lcd_max, pld_min=pld_min, pld_max=pld_max, sa_m2g_min=sa_m2g_min,
+                               sa_m2g_max=sa_m2g_max, sa_m2cm3_min=sa_m2cm3_min,
+                               sa_m2cm3_max=sa_m2cm3_max, limit=limit)
+        except Exception as e:
+            import sentry_sdk
+            sentry_sdk.init("https://287d83a67df94a3288777a876182cfcc@o310079.ingest.sentry.io/6290292", traces_sample_rate=0.0)
+            sentry_sdk.capture_exception(e)
+            raise e
+    else:
+        yield from fetch_inner(mofid=mofid, mofkey=mofkey, vf_min=vf_min, vf_max=vf_max, lcd_min=lcd_min,
+                               lcd_max=lcd_max, pld_min=pld_min, pld_max=pld_max, sa_m2g_min=sa_m2g_min,
+                               sa_m2g_max=sa_m2g_max, sa_m2cm3_min=sa_m2cm3_min,
+                               sa_m2cm3_max=sa_m2cm3_max, limit=limit)
+
+
+def fetch_inner(
         mofid: str = None,
         mofkey: str = None,
         vf_min: float = None,
@@ -73,4 +105,3 @@ def fetch(
 
     else:
         yield from get_all(params)
-

@@ -1,4 +1,5 @@
 .idea
+src/mofdb_client_n8ta.egg-info
 .DS_Store
 dist
 __pycache__
