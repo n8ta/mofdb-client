@@ -6,6 +6,7 @@ from .mof import Mof
 
 
 def get_page(params, headers: Dict[str, str], page=1) -> Tuple[List[Mof], int]:
+    """Download 1 page from the api returns List[Mof] + total # of pages"""
     if page and page != 1:
         params["page"] = page
     r = requests.get('https://mof.tech.northwestern.edu/mofs.json', headers=headers, params=params)
@@ -15,19 +16,27 @@ def get_page(params, headers: Dict[str, str], page=1) -> Tuple[List[Mof], int]:
 
 def get_all(params: Dict[str, str], pressure_unit: str = None, loading_unit: str = None) -> Generator[Mof, None, None]:
     headers = {}
+
+    # Build unit conversion headers if pressure/loading units are supplied.
     if pressure_unit or loading_unit:
+        # Download valid units
         r = requests.get('https://mof.tech.northwestern.edu/classifications.json')
         classifications = r.json()
+        # Sort into pressure/loading units
         pressure_units = [cls['name'] for cls in classifications if cls["type"] == "pressure"]
         loading_units = [cls['name'] for cls in classifications if cls["type"] == "loading"]
+        # Raise errors if invalid
         if pressure_unit is not None and pressure_unit not in pressure_units:
             raise InvalidUnit(
                 f"'{pressure_unit}' is not a valid unit for pressure. Valid pressure units are: {pressure_units}")
         if loading_unit is not None and loading_unit not in loading_units:
             raise InvalidUnit(
                 f"'{loading_unit}' is not a valid unit for loading. Valid loading units are: {loading_units}")
-        headers["pressure"] = pressure_unit
-        headers["loading"] = loading_unit
+        # Add to headers if unit was specified
+        if loading_unit:
+            headers["loading"] = loading_unit
+        if pressure_unit:
+            headers["pressure"] = pressure_unit
 
     page = 1
     pages = 2
@@ -57,7 +66,9 @@ def fetch(mofid: str = None,
           pressure_unit: str = None,
           loading_unit: str = None,
           limit: int = None) -> Generator[Mof, None, None]:
+    """Return all mofs that match the args supplied by querying the mofdb API"""
     if telemetry:
+        # Catch, log, and re-raise exceptions in telemetry mode
         try:
             yield from fetch_inner(mofid=mofid, mofkey=mofkey, vf_min=vf_min, vf_max=vf_max, lcd_min=lcd_min,
                                    lcd_max=lcd_max, pld_min=pld_min, pld_max=pld_max, sa_m2g_min=sa_m2g_min,
@@ -94,6 +105,7 @@ def fetch_inner(
         pressure_unit: str = None,
         loading_unit: str = None,
         limit: int = None) -> Generator[Mof, None, None]:
+    """Telemetry blind fetch function. Handles building params and stopping when limit is reached"""
     params = {}
     if mofid:
         params["mofid"] = mofid
