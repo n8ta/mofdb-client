@@ -5,20 +5,10 @@ import requests
 from .mof import Mof
 
 
-def get_page(params, headers: Dict[str, str], page=1) -> Tuple[List[Mof], int]:
-    """Download 1 page from the api returns List[Mof] + total # of pages"""
-    if page and page != 1:
-        params["page"] = page
-    r = requests.get('https://mof.tech.northwestern.edu/mofs.json', headers=headers, params=params)
-    json_response = r.json()
-    return [Mof(x) for x in json_response['results']], json_response["pages"]
-
-
-def get_all(params: Dict[str, str], pressure_unit: str = None, loading_unit: str = None) -> Generator[Mof, None, None]:
-    headers = {}
-
+def unit_conversion_headers(pressure_unit: str = None, loading_unit: str = None) -> Optional[Dict[str, str]]:
     # Build unit conversion headers if pressure/loading units are supplied.
     if pressure_unit or loading_unit:
+        headers = {}
         # Download valid units
         r = requests.get('https://mof.tech.northwestern.edu/classifications.json')
         classifications = r.json()
@@ -37,9 +27,23 @@ def get_all(params: Dict[str, str], pressure_unit: str = None, loading_unit: str
             headers["loading"] = loading_unit
         if pressure_unit:
             headers["pressure"] = pressure_unit
+        return headers
+    return None
 
+
+def get_page(params, headers: Dict[str, str], page=1) -> Tuple[List[Mof], int]:
+    """Download 1 page from the api returns List[Mof] + total # of pages"""
+    if page and page != 1:
+        params["page"] = page
+    r = requests.get('https://mof.tech.northwestern.edu/mofs.json', headers=headers, params=params)
+    json_response = r.json()
+    return [Mof(x) for x in json_response['results']], json_response["pages"]
+
+
+def get_all(params: Dict[str, str], pressure_unit: str = None, loading_unit: str = None) -> Generator[Mof, None, None]:
     page = 1
     pages = 2
+    headers = unit_conversion_headers(pressure_unit, loading_unit)
     while page <= pages:
         mofs, pages = get_page(params, headers, page)
         yield from mofs

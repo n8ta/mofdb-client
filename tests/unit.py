@@ -25,6 +25,25 @@ class BasicTests(unittest.TestCase):
         responses.add(responses.GET, url,
                       body=content, status=200)
 
+    def test_header_gen(self):
+        self.stub("classifications", {}, url="classifications.json")
+        from mofdb_client.main import unit_conversion_headers
+        self.assertEqual(unit_conversion_headers(), None)
+
+        pressure_only = unit_conversion_headers(pressure_unit='atm')
+        self.assertEqual(len(pressure_only), 1)
+        self.assertEqual(pressure_only['pressure'], 'atm')
+
+        loading_only = unit_conversion_headers(loading_unit='cm3(STP)/cm3')
+        self.assertEqual(len(loading_only), 1)
+        self.assertEqual(loading_only['loading'], 'cm3(STP)/cm3')
+
+        both = unit_conversion_headers(pressure_unit='atm', loading_unit='cm3(STP)/cm3')
+        self.assertEqual(len(both), 2)
+        self.assertEqual(both['pressure'], 'atm')
+        self.assertEqual(both['loading'], 'cm3(STP)/cm3')
+
+
     def test_e2e_headers(self):
         for mof in fetch(loading_unit="g/l", limit=102):
             for iso in mof.isotherms:
