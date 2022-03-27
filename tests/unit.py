@@ -6,20 +6,83 @@ from typing import Tuple, Dict
 import responses
 import urllib
 
-from mofdb_client import fetch
+from mofdb_client import fetch, InvalidUnit
 
 
 class BasicTests(unittest.TestCase):
-    def stub(self, name: str, params: Dict[str, any]):
-        params = urllib.parse.urlencode(params, doseq=False)
+
+    def load_file(self, name: str) -> str:
         file_path = pathlib.Path(__file__).parent.resolve()
         with open(os.path.join(file_path, "stubs", f"{name}.json")) as file:
-            content = file.read()
-            url = f"https://mof.tech.northwestern.edu/mofs.json?{params}"
-            print("registering")
-            print(url)
-            responses.add(responses.GET, url,
-                          body=content, status=200)
+            return file.read()
+
+    def stub(self, name: str, params: Dict[str, any], url: str = "mofs.json"):
+        params = "?" + urllib.parse.urlencode(params, doseq=False) if len(params) > 0 else ""
+        content = self.load_file(name)
+        url = f"https://mof.tech.northwestern.edu/{url}{params}"
+        print("registering")
+        print(url)
+        responses.add(responses.GET, url,
+                      body=content, status=200)
+
+    def test_e2e_headers(self):
+        for mof in fetch(loading_unit="g/l", limit=102):
+            for iso in mof.isotherms:
+                self.assertEqual(iso.adsorptionUnits, "g/l")
+        for mof in fetch(pressure_unit="atm", limit=102):
+            for iso in mof.isotherms:
+                self.assertEqual(iso.pressureUnits, "atm")
+        for mof in fetch(pressure_unit="atm", loading_unit="g/l", limit=102):
+            for iso in mof.isotherms:
+                self.assertEqual(iso.pressureUnits, "atm")
+                self.assertEqual(iso.adsorptionUnits, "g/l")
+
+    @responses.activate
+    def test_raises_for_bad_loading(self):
+        self.stub("classifications", {}, url="classifications.json")
+        self.stub("page1", {})
+        def test_raises():
+            for mof in fetch(loading_unit="lll", telemetry=False):
+                print(mof.name)
+        self.assertRaises(InvalidUnit, test_raises)
+
+    @responses.activate
+    def test_raises_for_bad_pressure(self):
+        self.stub("classifications", {}, url="classifications.json")
+        self.stub("page1", {})
+        def test_raises():
+            for mof in fetch(pressure_unit="123123", telemetry=False):
+                print(mof.name)
+        self.assertRaises(InvalidUnit, test_raises)
+
+    @responses.activate
+    def test_raises_for_bad_pressure_and_loading(self):
+        self.stub("classifications", {}, url="classifications.json")
+        self.stub("page1", {})
+        def test_raises():
+            for mof in fetch(pressure_unit="123123", loading_unit="123", telemetry=False):
+                print(mof.name)
+        self.assertRaises(InvalidUnit, test_raises)
+
+    @responses.activate
+    def test_correct_pressure_headers(self):
+        self.stub("classifications", {}, url="classifications.json")
+        responses.add(
+                responses.GET,
+                body=self.load_file("mofs_one_page"),
+                url="https://mof.tech.northwestern.edu/mofs.json",
+                match=[responses.matchers.header_matcher({"pressure": "atm"})])
+        self.assertEqual(len(list(fetch(pressure_unit="atm", telemetry=False))), 100)
+
+    @responses.activate
+    def test_correct_loading_headers(self):
+        self.stub("classifications", {}, url="classifications.json")
+        responses.add(
+                responses.GET,
+                body=self.load_file("mofs_one_page"),
+                url="https://mof.tech.northwestern.edu/mofs.json",
+                match=[responses.matchers.header_matcher({"loading": "g/l"})])
+        self.assertEqual(len(list(fetch(loading_unit="g/l", telemetry=False))), 100)
 
     @responses.activate
     def test_multiple_pages(self):

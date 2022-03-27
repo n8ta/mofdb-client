@@ -1,3 +1,4 @@
+
 # mofdb-client
 
 A typed lightweight client wrapping the [mofdb api](https://mof.tech.northwestern.edu/api).
@@ -39,6 +40,8 @@ This mof's cif file starts with: '_cell_length_a       18.571'
 
 ### Parameters
 *fetch* supports a number of arguements
+- pressure_units: str
+- loading_units: str
 - mofid: str 
 - mofkey: str 
 - vf_min: float 
@@ -54,6 +57,9 @@ This mof's cif file starts with: '_cell_length_a       18.571'
 - limit: int
 - telemetry: bool default true (see telemetry section)
 
+For valid values of pressure_units go here [mof.tech.northwestern.edu/classifications.json](https://mof.tech.northwestern.edu/classifications.json). The mofdb_client will reject invalid
+units/pressures and throw `InvalidUnit` exception.
+
 ### Design Note
 `fetch` is lazy because mofDB is large. Be sure to loop over it with `for mof in fetch()` and NOT `for mof in list(fetch())` since 
 building the list will download all the mofs before it starts processing and this will be very slow and may well run out of memory.
@@ -64,7 +70,9 @@ Tested on Python 3.9 likely to work on any 3.x.
 ### Future Enhancements:
 - [ ] Retries for transient network failures with exponential backoff
 
-- [ ] Support for unit conversions
+- [X] Support for unit conversions
+
+- [ ] Only download some columns to save time/bandwidth?
 
 ### Telemetry
 This package may report crashes/calls to fetch in library code when the telemetry arg is true. This is done using 

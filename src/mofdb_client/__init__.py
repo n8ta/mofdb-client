@@ -1,1 +1,1 @@
-from .main import fetch
+from .main import fetch, InvalidUnit
