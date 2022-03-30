@@ -4,7 +4,7 @@ dist: focal
 python:
   - 3.9
 install:
-  - python3 -m pip install build requests==2.27.1
+  - python3 -m pip install build requests==2.27.1 responses=0.20.0
   - python3 -m build
   - python3 -m pip install dist/*.whl
 script:
