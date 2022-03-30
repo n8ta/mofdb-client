@@ -4,6 +4,7 @@ dist: focal
 python:
   - 3.9
 install:
+  - python3 -m pip install build
   - ./scripts/install-dev
 script:
   - python3 tests/unit.py
