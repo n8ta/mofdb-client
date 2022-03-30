@@ -8,24 +8,7 @@ python:
   - "3.7"
   - "3.8"
   - "3.9"
-jobs:
-  include:
-    - rvm: 3.0.2
-      script:
-        - ./scripts/install-dev
-        - python3 tests/unit.py
-
-    - rvm: 2.7
-      script:
-        - ./scripts/install-dev
-        - python3 tests/unit.py
-
-    - rvm: 2.6
-      script:
-        - ./scripts/install-dev
-        - python3 tests/unit.py
-
-    - rvm: 2.5
-      script:
-        - ./scripts/install-dev
-        - python3 tests/unit.py
+install:
+  - ./scripts/install-dev
+script:
+  - python3 tests/unit.py
