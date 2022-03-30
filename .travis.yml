@@ -5,6 +5,7 @@ python:
   - 3.9
 install:
   - python3 -m pip install build
-  - ./scripts/install-dev
+  - python3 -m build
+  - python3 -m pip install dist/*.whl
 script:
   - python3 tests/unit.py
