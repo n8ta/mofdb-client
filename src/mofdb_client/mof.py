@@ -27,6 +27,7 @@ class Mof:
         self.mofid = json["mofid"]
         self.mofkey = json["mofkey"]
         self.batch_number = json["batch_number"]
+        self.json_repr = json
 
     id: int
     name: str
@@ -48,3 +49,4 @@ class Mof:
     mofid: Optional[str]
     mofkey: Optional[str]
     batch_number: Optional[int]
+    json_repr: dict
