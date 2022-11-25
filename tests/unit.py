@@ -101,22 +101,22 @@ class BasicTests(unittest.TestCase):
             self.assertTrue(mof.pld <= 10)
 
     def test_sa_m2g_min(self):
-        mofs = list(fetch(sa_m2g_min=10, limit=10))
+        mofs = list(fetch(sa_m2g_min=1000, limit=10))
         for mof in mofs:
             self.assertTrue(mof.surface_area_m2g >= 1000)
 
     def test_sa_m2g_max(self):
-        mofs = list(fetch(sa_m2g_max=10, limit=10))
+        mofs = list(fetch(sa_m2g_max=1000, limit=10))
         for mof in mofs:
             self.assertTrue(mof.surface_area_m2g <= 1000)
 
     def test_sa_m2cm3_min(self):
-        mofs = list(fetch(sa_m2cm3_min=100, limit=10))
+        mofs = list(fetch(sa_m2cm3_min=1000, limit=10))
         for mof in mofs:
             self.assertTrue(mof.surface_area_m2cm3 >= 1000)
 
     def test_sa_m2cm3_max(self):
-        mofs = list(fetch(sa_m2cm3_max=100, limit=10))
+        mofs = list(fetch(sa_m2cm3_max=1000, limit=10))
         for mof in mofs:
             self.assertTrue(mof.surface_area_m2cm3 <= 1000)
 
