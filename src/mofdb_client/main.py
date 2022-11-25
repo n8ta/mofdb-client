@@ -1,7 +1,7 @@
-import dataclasses
-from typing import Generator, List, Tuple, Dict, Optional
+import json
+from typing import Generator, Dict, Optional
 import requests
-
+from stream_unzip import stream_unzip
 from .mof import Mof
 
 
@@ -31,23 +31,23 @@ def unit_conversion_headers(pressure_unit: str = None, loading_unit: str = None)
     return None
 
 
-def get_page(params, headers: Dict[str, str], page=1) -> Tuple[List[Mof], int]:
-    """Download 1 page from the api returns List[Mof] + total # of pages"""
-    if page and page != 1:
-        params["page"] = page
-    r = requests.get('https://mof.tech.northwestern.edu/mofs.json', headers=headers, params=params)
-    json_response = r.json()
-    return [Mof(x) for x in json_response['results']], json_response["pages"]
-
-
 def get_all(params: Dict[str, str], pressure_unit: str = None, loading_unit: str = None) -> Generator[Mof, None, None]:
-    page = 1
-    pages = 2
     headers = unit_conversion_headers(pressure_unit, loading_unit)
-    while page <= pages:
-        mofs, pages = get_page(params, headers, page)
-        yield from mofs
-        page += 1
+    params["bulk"] = "true"
+    params["cifs"] = "false"
+    resp = requests.get('https://mof.tech.northwestern.edu/mofs.json', headers=headers, params=params, stream=True)
+    for file_name, file_size, unzipped_chunks in stream_unzip(resp.raw):
+        file_name = file_name.decode("utf8")
+        # This shouldn't happen but just in case check for cifs mixed in
+        if str(file_name).endswith(".cif"):
+            for chunk in unzipped_chunks:
+                pass
+            continue
+        data = b""
+        for chunk in unzipped_chunks:
+            data += chunk
+        loaded = json.loads(data)
+        yield Mof(loaded)
 
 
 class InvalidUnit(Exception):

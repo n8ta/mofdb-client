@@ -86,3 +86,13 @@ For example this could include:
 - python runtime version
 - hostname
 - anything else sentry captures by default
+
+### Publishing a new version
+Update pyproject.toml version
+
+```
+python3 -m build -n
+python3 -m twine upload dist/*
+```
+
+
