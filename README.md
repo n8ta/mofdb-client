@@ -1,5 +1,5 @@
-
 # mofdb-client
+![ci status badge](https://api.travis-ci.com/n8ta/mofdb-client.svg?branch=master)
 
 A typed lightweight client wrapping the [mofdb api](https://mof.tech.northwestern.edu/api).
 
