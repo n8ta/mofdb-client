@@ -5,10 +5,8 @@ python:
   - 3.9
   - 3.8
   - 3.7
-  - 3.6
-  - 3.5
 install:
-  - python3 -m pip install build requests==2.27.1 responses==0.20.0
+  - python3 -m pip install build requests==2.27.1 stream-unzip==0.0.70
   - python3 -m build
   - python3 -m pip install dist/*.whl
 script:

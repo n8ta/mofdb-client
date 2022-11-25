@@ -1,2 +1,4 @@
 #!/bin/sh
+python3 -m pip install build wheel twine
+python3 -m build -n
 python3 -m twine upload --repository pypi dist/*
