@@ -64,6 +64,12 @@ class BasicTests(unittest.TestCase):
         mofs = list(fetch(limit=3))
         self.assertEqual(len(mofs), 3)
 
+    def test_name(self):
+        mofs = list(fetch(name="LEDJOU_clean"))
+        for mof in mofs:
+            self.assertEqual(mof.name, "LEDJOU_clean")
+        self.assertEqual(1, len(mofs))
+
     # def test_mofkey_match(self):
     #     mofkey = "Zn.CDOWNLMZVKJRSC.OHLSHRJUBRUKAN.WWWSEKAIASUCDB.MOFkey-v1.pcu UNKNOWN"
     #     mofs = list(fetch(mofkey=mofkey))

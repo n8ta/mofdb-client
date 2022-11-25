@@ -66,6 +66,7 @@ def fetch(mofid: str = None,
           sa_m2g_max: float = None,
           sa_m2cm3_min: float = None,
           sa_m2cm3_max: float = None,
+          name: str = None,
           telemetry: bool = True,
           pressure_unit: str = None,
           loading_unit: str = None,
@@ -77,7 +78,7 @@ def fetch(mofid: str = None,
             yield from fetch_inner(mofid=mofid, mofkey=mofkey, vf_min=vf_min, vf_max=vf_max, lcd_min=lcd_min,
                                    lcd_max=lcd_max, pld_min=pld_min, pld_max=pld_max, sa_m2g_min=sa_m2g_min,
                                    sa_m2g_max=sa_m2g_max, sa_m2cm3_min=sa_m2cm3_min,
-                                   sa_m2cm3_max=sa_m2cm3_max, pressure_unit=pressure_unit, loading_unit=loading_unit,
+                                   sa_m2cm3_max=sa_m2cm3_max, name=name, pressure_unit=pressure_unit, loading_unit=loading_unit,
                                    limit=limit)
         except Exception as e:
             import sentry_sdk
@@ -89,7 +90,7 @@ def fetch(mofid: str = None,
         yield from fetch_inner(mofid=mofid, mofkey=mofkey, vf_min=vf_min, vf_max=vf_max, lcd_min=lcd_min,
                                lcd_max=lcd_max, pld_min=pld_min, pld_max=pld_max, sa_m2g_min=sa_m2g_min,
                                sa_m2g_max=sa_m2g_max, sa_m2cm3_min=sa_m2cm3_min,
-                               sa_m2cm3_max=sa_m2cm3_max, pressure_unit=pressure_unit, loading_unit=loading_unit,
+                               sa_m2cm3_max=sa_m2cm3_max, name=name, pressure_unit=pressure_unit, loading_unit=loading_unit,
                                limit=limit)
 
 
@@ -106,6 +107,7 @@ def fetch_inner(
         sa_m2g_max: float = None,
         sa_m2cm3_min: float = None,
         sa_m2cm3_max: float = None,
+        name: str = None,
         pressure_unit: str = None,
         loading_unit: str = None,
         limit: int = None) -> Generator[Mof, None, None]:
@@ -137,6 +139,8 @@ def fetch_inner(
         params["sa_m2cm3_min"] = sa_m2cm3_min
     if sa_m2cm3_max:
         params["sa_m2cm3_max"] = sa_m2cm3_max
+    if name:
+        params["name"] = name
 
     if limit:
         yielded = 0

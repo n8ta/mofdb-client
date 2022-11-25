@@ -40,9 +40,10 @@ This mof's cif file starts with: '_cell_length_a       18.571'
 ```
 
 ### Parameters
-*fetch* supports a number of arguements
-- pressure_units: str
-- loading_units: str
+*fetch* supports a number of arguments
+- name: str
+- pressure_unit: str
+- loading_unit: str
 - mofid: str 
 - mofkey: str 
 - vf_min: float 
