@@ -1,12 +1,13 @@
 # mofdb-client
 ![ci status badge](https://api.travis-ci.com/n8ta/mofdb-client.svg?branch=master)
 
-A typed lightweight client wrapping the [mofdb api](https://mof.tech.northwestern.edu/api).
+A typed, fast, lightweight, client wrapping the [mofdb api](https://mof.tech.northwestern.edu/api). This client is the fastest way to access
+mofdb since it utilizes the streaming bulk API. Using the regular paginated API will be slow for large page numbers.
 
 ### Installation
 
 ```shell
-python3 -m pip install mofdb_client
+python3 -m pip install mofdb_client==0.6.0
 ```
 
 ### Example
@@ -65,17 +66,15 @@ units/pressures and throw `InvalidUnit` exception.
 building the list will download all the mofs before it starts processing and this will be very slow and may well run out of memory.
 
 ### Compatibility
-Tested on Python 3.9 likely to work on any 3.x.
+Tested on Python 3.7 to 3.9.
 
 ### Future Enhancements:
 - [ ] Retries for transient network failures with exponential backoff
-
 - [X] Support for unit conversions
-
 - [ ] Only download some columns to save time/bandwidth?
 
 ### Telemetry
-This package may report crashes/calls to fetch in library code when the telemetry arg is true. This is done using 
+This package may phone home crash reports that happen in library code when the telemetry arg is true. This is done using 
 [sentry](https://docs.sentry.io/). Nothing in addition to fetch params and data captured by default by sentry is ever
 captured.
 
