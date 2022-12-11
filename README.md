@@ -67,7 +67,7 @@ units/pressures and throw `InvalidUnit` exception.
 building the list will download all the mofs before it starts processing and this will be very slow and may well run out of memory.
 
 ### Compatibility
-Tested on Python 3.7 to 3.9.
+[Tested](https://app.travis-ci.com/github/n8ta/mofdb-client) on Python 3.7 to 3.11. 
 
 ### Future Enhancements:
 - [ ] Retries for transient network failures with exponential backoff
