@@ -126,6 +126,10 @@ class BasicTests(unittest.TestCase):
         for mof in mofs:
             self.assertTrue(mof.surface_area_m2cm3 <= 1000)
 
+    def test_empty(self):
+        mofs = list(fetch(name="ASJDIFAKJSDFKJASDKJFJAKLSDFLKJSDALKJFLJKDSFJKL"))
+        self.assertEqual(len(mofs), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

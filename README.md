@@ -95,4 +95,7 @@ python3 -m build -n
 python3 -m twine upload dist/*
 ```
 
+### Change log
 
+#### 0.8.0
+Fix for crashes on queries returning no mofs. Required a change to mofdb repo as well. Add a 204.response file to zip stream to signal empty response.

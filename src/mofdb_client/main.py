@@ -37,6 +37,9 @@ def get_all(params: Dict[str, str], pressure_unit: str = None, loading_unit: str
     params["cifs"] = "false"
     resp = requests.get('https://mof.tech.northwestern.edu/mofs.json', headers=headers, params=params, stream=True)
     for file_name, file_size, unzipped_chunks in stream_unzip(resp.raw):
+        if file_name == b"204.response":
+            # No mofs match this query
+            return None
         file_name = file_name.decode("utf8")
         # This shouldn't happen but just in case check for cifs mixed in
         if str(file_name).endswith(".cif"):
