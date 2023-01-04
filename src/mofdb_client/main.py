@@ -53,9 +53,12 @@ def get_all(params: Dict[str, str], pressure_unit: str = None, loading_unit: str
         yield Mof(loaded)
 
 
-class InvalidUnit(Exception):
+
+class MofdbClientexception(Exception):
     pass
 
+class InvalidUnit(MofdbClientexception):
+    pass
 
 def fetch(mofid: str = None,
           mofkey: str = None,
@@ -83,6 +86,8 @@ def fetch(mofid: str = None,
                                    sa_m2g_max=sa_m2g_max, sa_m2cm3_min=sa_m2cm3_min,
                                    sa_m2cm3_max=sa_m2cm3_max, name=name, pressure_unit=pressure_unit, loading_unit=loading_unit,
                                    limit=limit)
+        except MofdbClientexception as e:
+            pass
         except Exception as e:
             import sentry_sdk
             sentry_sdk.init("https://287d83a67df94a3288777a876182cfcc@o310079.ingest.sentry.io/6290292",

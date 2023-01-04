@@ -7,7 +7,7 @@ mofdb since it utilizes the streaming bulk API. Using the regular paginated API 
 ### Installation
 
 ```shell
-python3 -m pip install mofdb_client==0.8.0
+python3 -m pip install mofdb_client==0.9.0
 ```
 
 ### Example
@@ -96,6 +96,10 @@ python3 -m twine upload dist/*
 ```
 
 ### Change log
+
+
+#### 0.9.0
+Do not report mofdb exceptions like "InvalidUnit" to sentry error monitoring. These indicate user error.
 
 #### 0.8.0
 Fix for crashes on queries returning no mofs. Required a change to mofdb repo as well. Add a 204.response file to zip stream to signal empty response.
