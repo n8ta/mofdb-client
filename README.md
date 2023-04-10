@@ -39,6 +39,44 @@ This mof's cif file starts with: '_cell_length_a       18.571'
 ...
 ```
 
+```
+# Download adsorption data from MOFXDB using mof_client package
+# https://github.com/n8ta/mofdb-client
+# This is an exmaple to download CO2 adsorption isotherm data for MOFs from hMOF database
+
+# load mofdb_client
+from mofdb_client import fetch
+
+# find mof with void fraction less than 0.5
+for imof in fetch(vf_max=0.5):
+
+    # only care about MOF in the hMOF database
+    if imof.database == 'hMOF':
+       
+        # loop over all available isotherms for imof
+        for iiso in imof.isotherms:
+           
+            # only care about CO2 isotherm
+            if iiso.adsorbates[0].formula == 'CO2':
+               
+                # print matched MOF name
+                print(imof.name)
+
+                # print CO2 adsorption isotherm temperature in Kelvin
+                print(iiso.temperature)
+
+                # print pressure units
+                print(iiso.pressureUnits)
+
+                # print adsorption data units
+                print(iiso.adsorptionUnits)
+               
+                # loop over all adsorption data points in the matched CO2 isotherm
+                # and print each adsorption data points in this isotherm
+                for jdata in iiso.isotherm_data:
+                    print('adsorption data is {} at pressure {}'.format(jdata.total_adsorption, jdata.pressure))
+```
+
 ### Parameters
 *fetch* supports a number of arguments
 - name: str
