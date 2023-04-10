@@ -7,7 +7,7 @@ mofdb since it utilizes the streaming bulk API. Using the regular paginated API 
 ### Installation
 
 ```shell
-python3 -m pip install mofdb_client==0.9.0
+python3 -m pip install mofdb_client==0.10.0
 ```
 
 ### Example
@@ -40,14 +40,10 @@ This mof's cif file starts with: '_cell_length_a       18.571'
 ```
 
 ```python3
-# Download adsorption data from MOFXDB using mof_client package
-# https://github.com/n8ta/mofdb-client
-# This is an exmaple to download CO2 adsorption isotherm data for MOFs from hMOF database
-
-# load mofdb_client
+# This is an example of downloading CO2 adsorption isotherm data for MOFs from hMOF database
 from mofdb_client import fetch
 
-# find mof with void fraction less than 0.5 (for example), in 'hMOF' database
+# Find mofs with void fraction less than 0.5 (for example), in 'hMOF' database
 for imof in fetch(vf_max=0.5, database='hMOF'):
 
     # loop over all available isotherms for imof 
@@ -84,15 +80,6 @@ adsorption data is 3.16225 at pressure 0.1
 adsorption data is 5.46213 at pressure 2.5
 adsorption data is 2.48016 at pressure 0.05
 adsorption data is 4.51262 at pressure 0.5
-hMOF-5
-298
-bar
-mol/kg
-adsorption data is 0.300224 at pressure 0.01
-adsorption data is 1.59719 at pressure 0.1
-adsorption data is 2.23941 at pressure 2.5
-adsorption data is 1.13122 at pressure 0.05
-adsorption data is 2.01518 at pressure 0.5
 ...
 ```
 
