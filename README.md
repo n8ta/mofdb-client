@@ -39,6 +39,63 @@ This mof's cif file starts with: '_cell_length_a       18.571'
 ...
 ```
 
+```python3
+# Download adsorption data from MOFXDB using mof_client package
+# https://github.com/n8ta/mofdb-client
+# This is an exmaple to download CO2 adsorption isotherm data for MOFs from hMOF database
+
+# load mofdb_client
+from mofdb_client import fetch
+
+# find mof with void fraction less than 0.5 (for example), in 'hMOF' database
+for imof in fetch(vf_max=0.5, database='hMOF'):
+
+    # loop over all available isotherms for imof 
+    for iiso in imof.isotherms:
+        
+        # only care about CO2 isotherm
+        if iiso.adsorbates[0].formula == 'CO2':
+            
+            # print matched MOF name
+            print(imof.name)
+
+            # print CO2 adsorption isotherm temperature in Kelvin
+            print(iiso.temperature)
+
+            # print pressure units
+            print(iiso.pressureUnits)
+
+            # print adsorption data units
+            print(iiso.adsorptionUnits)
+            
+            # loop over all adsorption data points in the matched CO2 isotherm 
+            # and print each adsorption data points in this isotherm
+            for jdata in iiso.isotherm_data:
+                print('adsorption data is {} at pressure {}'.format(jdata.total_adsorption, jdata.pressure))
+```
+
+```
+hMOF-7
+298
+bar
+mol/kg
+adsorption data is 1.20398 at pressure 0.01
+adsorption data is 3.16225 at pressure 0.1
+adsorption data is 5.46213 at pressure 2.5
+adsorption data is 2.48016 at pressure 0.05
+adsorption data is 4.51262 at pressure 0.5
+hMOF-5
+298
+bar
+mol/kg
+adsorption data is 0.300224 at pressure 0.01
+adsorption data is 1.59719 at pressure 0.1
+adsorption data is 2.23941 at pressure 2.5
+adsorption data is 1.13122 at pressure 0.05
+adsorption data is 2.01518 at pressure 0.5
+...
+```
+
 ### Parameters
 *fetch* supports a number of arguments
 - name: str
