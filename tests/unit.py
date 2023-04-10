@@ -1,6 +1,6 @@
 import unittest
 
-from mofdb_client import fetch, InvalidUnit
+from mofdb_client import fetch, InvalidUnit, InvalidDatabase
 
 
 class BasicTests(unittest.TestCase):
@@ -17,21 +17,32 @@ class BasicTests(unittest.TestCase):
                 self.assertEqual(iso.pressureUnits, "atm")
                 self.assertEqual(iso.adsorptionUnits, "g/l")
 
+    def test_databases(self):
+        for mof in fetch(database="hMOF", limit=10):
+            self.assertEqual(mof.database, "hMOF")
+
+    def test_bad_database(self):
+        def test_raises():
+            for mof in fetch(database="uh-oh"):
+                print(mof.name)
+        self.assertRaises(InvalidDatabase, test_raises)
+
+
     def test_raises_for_bad_loading(self):
         def test_raises():
-            for mof in fetch(loading_unit="lll", telemetry=False):
+            for mof in fetch(loading_unit="lll"):
                 print(mof.name)
         self.assertRaises(InvalidUnit, test_raises)
 
     def test_raises_for_bad_pressure(self):
         def test_raises():
-            for mof in fetch(pressure_unit="123123", telemetry=False):
+            for mof in fetch(pressure_unit="123123"):
                 print(mof.name)
         self.assertRaises(InvalidUnit, test_raises)
 
     def test_raises_for_bad_pressure_and_loading(self):
         def test_raises():
-            for mof in fetch(pressure_unit="123123", loading_unit="123", telemetry=False):
+            for mof in fetch(pressure_unit="123123", loading_unit="123"):
                 print(mof.name)
         self.assertRaises(InvalidUnit, test_raises)
 

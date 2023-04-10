@@ -56,6 +56,7 @@ This mof's cif file starts with: '_cell_length_a       18.571'
 - sa_m2g_max: float 
 - sa_m2cm3_min: float 
 - sa_m2cm3_max: float 
+- database: str
 - limit: int
 - telemetry: bool default true (see telemetry section)
 

@@ -31,6 +31,14 @@ def unit_conversion_headers(pressure_unit: str = None, loading_unit: str = None)
     return None
 
 
+def validate_db(database: str) -> str:
+    dbs = requests.get('https://mof.tech.northwestern.edu/databases.json').json()
+    names = [db["name"] for db in dbs]
+    if database not in names:
+        raise InvalidDatabase(f"{database} is not a valid database name. Valid names are: {names}")
+    return database
+
+
 def get_all(params: Dict[str, str], pressure_unit: str = None, loading_unit: str = None) -> Generator[Mof, None, None]:
     headers = unit_conversion_headers(pressure_unit, loading_unit)
     params["bulk"] = "true"
@@ -53,12 +61,17 @@ def get_all(params: Dict[str, str], pressure_unit: str = None, loading_unit: str
         yield Mof(loaded)
 
 
-
 class MofdbClientexception(Exception):
     pass
 
+
 class InvalidUnit(MofdbClientexception):
     pass
+
+
+class InvalidDatabase(MofdbClientexception):
+    pass
+
 
 def fetch(mofid: str = None,
           mofkey: str = None,
@@ -73,6 +86,7 @@ def fetch(mofid: str = None,
           sa_m2cm3_min: float = None,
           sa_m2cm3_max: float = None,
           name: str = None,
+          database: str = None,
           telemetry: bool = True,
           pressure_unit: str = None,
           loading_unit: str = None,
@@ -84,10 +98,11 @@ def fetch(mofid: str = None,
             yield from fetch_inner(mofid=mofid, mofkey=mofkey, vf_min=vf_min, vf_max=vf_max, lcd_min=lcd_min,
                                    lcd_max=lcd_max, pld_min=pld_min, pld_max=pld_max, sa_m2g_min=sa_m2g_min,
                                    sa_m2g_max=sa_m2g_max, sa_m2cm3_min=sa_m2cm3_min,
-                                   sa_m2cm3_max=sa_m2cm3_max, name=name, pressure_unit=pressure_unit, loading_unit=loading_unit,
+                                   sa_m2cm3_max=sa_m2cm3_max, name=name, database=database, pressure_unit=pressure_unit,
+                                   loading_unit=loading_unit,
                                    limit=limit)
         except MofdbClientexception as e:
-            pass
+            raise e
         except Exception as e:
             import sentry_sdk
             sentry_sdk.init("https://287d83a67df94a3288777a876182cfcc@o310079.ingest.sentry.io/6290292",
@@ -98,7 +113,8 @@ def fetch(mofid: str = None,
         yield from fetch_inner(mofid=mofid, mofkey=mofkey, vf_min=vf_min, vf_max=vf_max, lcd_min=lcd_min,
                                lcd_max=lcd_max, pld_min=pld_min, pld_max=pld_max, sa_m2g_min=sa_m2g_min,
                                sa_m2g_max=sa_m2g_max, sa_m2cm3_min=sa_m2cm3_min,
-                               sa_m2cm3_max=sa_m2cm3_max, name=name, pressure_unit=pressure_unit, loading_unit=loading_unit,
+                               sa_m2cm3_max=sa_m2cm3_max, name=name, database=database, pressure_unit=pressure_unit,
+                               loading_unit=loading_unit,
                                limit=limit)
 
 
@@ -116,6 +132,7 @@ def fetch_inner(
         sa_m2cm3_min: float = None,
         sa_m2cm3_max: float = None,
         name: str = None,
+        database: str = None,
         pressure_unit: str = None,
         loading_unit: str = None,
         limit: int = None) -> Generator[Mof, None, None]:
@@ -149,6 +166,8 @@ def fetch_inner(
         params["sa_m2cm3_max"] = sa_m2cm3_max
     if name:
         params["name"] = name
+    if database:
+        params["database"] = validate_db(database)
 
     if limit:
         yielded = 0
